@@ -1,4 +1,4 @@
-# nft-geo-filter
+# nft-geo-maxmind
 Allow/deny traffic in nftables using country specific IP blocks
 
 # Requirements
@@ -6,13 +6,20 @@ This script requires nftables >= 0.9.0
 
 # Installation
 Download the script from here:
-https://raw.githubusercontent.com/rpthms/nft-geo-filter/master/nft-geo-filter
+https://raw.githubusercontent.com/renedis/nft-geo-maxmind/master/nft-geo-maxmind
 
 # TL;DR
-Run `nft-geo-filter --table-family netdev --interface <interface_to_internet>
-XX` to block packets from the country whose ISO-3166-1 alpha-2 country code is
-XX. Replace `<interface_to_internet>` with the interface name in your system
-that's connected to the internet (Eg:- eth0).
+Run:
+
+`nft-geo-maxmind --verbose --allow --table-family ip --allow-established --interface eth0 --provider maxmind --maxmind-zip country-csv.zip nl`.
+
+- To block packets from the country whose ISO-3166-1 alpha-2 country code is XX (Eg: nl).
+- Replace `<interface_to_internet>` with the interface name in your system that's connected to the internet (Eg: --interface eth0).
+
+Work in progress:
+A zip file with a CSV database is automatically downloaded from the maxmind website when `--license` is provided with name country-csv.zip. (Eg: --license AbcAbc_DgoeFvdfoi493TFIBBdscd1234_ppk)
+For now I use maxmind-download-and-run.py to pass the --license variable because I can't make it work together with --maxmind-zip. For now I call within that python script the original script.
+
 
 # Description
 This script will download IPv4 or/and IPv6 blocks for the specified countries
