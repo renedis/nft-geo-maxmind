@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+
+import argparse
+import subprocess
+import sys
+
+def download_file(license_key):
+    url = f"https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country-CSV&license_key={license_key}&suffix=zip"
+    output_file = "country-csv.zip"
+
+    subprocess.run(['wget', '-O', output_file, url])
+    print(f"File downloaded and saved as {output_file}")
+    return output_file
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Download file with license key')
+    parser.add_argument('--license', help='Your license key', required=True)
+
+    args = parser.parse_args()
+    license_key = args.license
+
+    downloaded_file = download_file(license_key)
+
+    python_executable = sys.executable
+    script_path = 'nft-geo-maxmind'
+
+    subprocess.run([python_executable, script_path, '--verbose', '--allow', '--table-family', 'ip', '--allow-established', '--interface', 'eth0', '--provider', 'maxmind', '--maxmind-zip', downloaded_file, 'nl'])
